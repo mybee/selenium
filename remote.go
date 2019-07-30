@@ -233,7 +233,7 @@ func NewRemote(capabilities Capabilities, urlPrefix string) (WebDriver, error) {
 
 func (wd *remoteWD) stringCommand(urlTemplate string) (string, error) {
 	url := wd.requestURL(urlTemplate, wd.id)
-	response, err := wd.execute("GET", url, nil)
+	response, err := wd.execute("GET", url, nil, "")
 	if err != nil {
 		return "", err
 	}
@@ -258,13 +258,13 @@ func (wd *remoteWD) voidCommand(urlTemplate string, params interface{}) error {
 	if err != nil {
 		return err
 	}
-	_, err = wd.execute("POST", wd.requestURL(urlTemplate, wd.id), data)
+	_, err = wd.execute("POST", wd.requestURL(urlTemplate, wd.id), data, "")
 	return err
 }
 
 func (wd remoteWD) stringsCommand(urlTemplate string) ([]string, error) {
 	url := wd.requestURL(urlTemplate, wd.id)
-	response, err := wd.execute("GET", url, nil)
+	response, err := wd.execute("GET", url, nil, "")
 	if err != nil {
 		return nil, err
 	}
@@ -279,7 +279,7 @@ func (wd remoteWD) stringsCommand(urlTemplate string) ([]string, error) {
 
 func (wd *remoteWD) boolCommand(urlTemplate string) (bool, error) {
 	url := wd.requestURL(urlTemplate, wd.id)
-	response, err := wd.execute("GET", url, nil)
+	response, err := wd.execute("GET", url, nil, "")
 	if err != nil {
 		return false, err
 	}
@@ -294,7 +294,7 @@ func (wd *remoteWD) boolCommand(urlTemplate string) (bool, error) {
 
 func (wd *remoteWD) Status() (*Status, error) {
 	url := wd.requestURL("/status")
-	reply, err := wd.execute("GET", url, nil)
+	reply, err := wd.execute("GET", url, nil, "")
 	if err != nil {
 		return nil, err
 	}
@@ -417,7 +417,7 @@ func (wd *remoteWD) NewSession() (string, error) {
 			return "", err
 		}
 
-		response, err := wd.execute("POST", wd.requestURL("/session"), data)
+		response, err := wd.execute("POST", wd.requestURL("/session"), data, "")
 		if err != nil {
 			return "", err
 		}
@@ -517,7 +517,7 @@ func (wd *remoteWD) SwitchSession(sessionID string) error {
 
 func (wd *remoteWD) Capabilities() (Capabilities, error) {
 	url := wd.requestURL("/session/%s", wd.id)
-	response, err := wd.execute("GET", url, nil)
+	response, err := wd.execute("GET", url, nil, "")
 	if err != nil {
 		return nil, err
 	}
@@ -568,7 +568,7 @@ func (wd *remoteWD) Quit() error {
 	if wd.id == "" {
 		return nil
 	}
-	_, err := wd.execute("DELETE", wd.requestURL("/session/%s", wd.id), nil)
+	_, err := wd.execute("DELETE", wd.requestURL("/session/%s", wd.id), nil, "")
 	if err == nil {
 		wd.id = ""
 	}
@@ -591,7 +591,7 @@ func (wd *remoteWD) WindowHandles() ([]string, error) {
 
 func (wd *remoteWD) CurrentURL() (string, error) {
 	url := wd.requestURL("/session/%s/url", wd.id)
-	response, err := wd.execute("GET", url, nil)
+	response, err := wd.execute("GET", url, nil, "")
 	if err != nil {
 		return "", err
 	}
