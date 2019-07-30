@@ -66,7 +66,7 @@ func newRequest(method string, url string, data []byte, cookie string) (*http.Re
 		return nil, err
 	}
 	if cookie != "" {
-		request.Header.Set("cookie", cookie)
+		request.Header.Add("cookie", cookie)
 	}
 	request.Header.Add("Accept", jsonContentType)
 
