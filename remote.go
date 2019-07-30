@@ -603,7 +603,7 @@ func (wd *remoteWD) CurrentURL() (string, error) {
 	return *reply.Value, nil
 }
 
-func (wd *remoteWD) Get(url string) error {
+func (wd *remoteWD) Get(url, cookie string) error {
 	requestURL := wd.requestURL("/session/%s/url", wd.id)
 	params := map[string]string{
 		"url": url,
@@ -612,7 +612,7 @@ func (wd *remoteWD) Get(url string) error {
 	if err != nil {
 		return err
 	}
-	_, err = wd.execute("POST", requestURL, data)
+	_, err = wd.execute("POST", requestURL, data, cookie)
 	return err
 }
 
