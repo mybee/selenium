@@ -664,7 +664,7 @@ func (wd *remoteWD) find(by, value, suffix, url string) ([]byte, error) {
 		url = "/session/%s/element"
 	}
 
-	return wd.execute("POST", wd.requestURL(url+suffix, wd.id), data)
+	return wd.execute("POST", wd.requestURL(url+suffix, wd.id), data, "")
 }
 
 func (wd *remoteWD) DecodeElement(data []byte) (WebElement, error) {
@@ -745,7 +745,7 @@ func (wd *remoteWD) FindElements(by, value string) ([]WebElement, error) {
 
 func (wd *remoteWD) Close() error {
 	url := wd.requestURL("/session/%s/window", wd.id)
-	_, err := wd.execute("DELETE", url, nil)
+	_, err := wd.execute("DELETE", url, nil, "")
 	return err
 }
 
@@ -773,7 +773,7 @@ func (wd *remoteWD) MaximizeWindow(name string) error {
 			}
 		}
 		url := wd.requestURL("/session/%s/window/%s/maximize", wd.id, name)
-		_, err := wd.execute("POST", url, nil)
+		_, err := wd.execute("POST", url, nil, "")
 		return err
 	}
 	return wd.modifyWindow(name, "POST", "maximize", map[string]string{})
@@ -819,7 +819,7 @@ func (wd *remoteWD) modifyWindow(name, verb, command string, params interface{})
 		}
 	}
 
-	if _, err := wd.execute(verb, url, data); err != nil {
+	if _, err := wd.execute(verb, url, data, ""); err != nil {
 		return err
 	}
 
@@ -878,7 +878,7 @@ func (wd *remoteWD) ActiveElement() (WebElement, error) {
 		verb = "POST"
 	}
 	url := wd.requestURL("/session/%s/element/active", wd.id)
-	response, err := wd.execute(verb, url, nil)
+	response, err := wd.execute(verb, url, nil, "")
 	if err != nil {
 		return nil, err
 	}
@@ -929,7 +929,7 @@ func (wd *remoteWD) GetCookie(name string) (Cookie, error) {
 		return Cookie{}, errors.New("cookie not found")
 	}
 	url := wd.requestURL("/session/%s/cookie/%s", wd.id, name)
-	data, err := wd.execute("GET", url, nil)
+	data, err := wd.execute("GET", url, nil, "")
 	if err != nil {
 		return Cookie{}, err
 	}
@@ -954,7 +954,7 @@ func (wd *remoteWD) GetCookie(name string) (Cookie, error) {
 
 func (wd *remoteWD) GetCookies() ([]Cookie, error) {
 	url := wd.requestURL("/session/%s/cookie", wd.id)
-	data, err := wd.execute("GET", url, nil)
+	data, err := wd.execute("GET", url, nil, "")
 	if err != nil {
 		return nil, err
 	}
@@ -995,13 +995,13 @@ func (wd *remoteWD) AddCookie(cookie *Cookie) error {
 
 func (wd *remoteWD) DeleteAllCookies() error {
 	url := wd.requestURL("/session/%s/cookie", wd.id)
-	_, err := wd.execute("DELETE", url, nil)
+	_, err := wd.execute("DELETE", url, nil, "")
 	return err
 }
 
 func (wd *remoteWD) DeleteCookie(name string) error {
 	url := wd.requestURL("/session/%s/cookie/%s", wd.id, name)
-	_, err := wd.execute("DELETE", url, nil)
+	_, err := wd.execute("DELETE", url, nil, "")
 	return err
 }
 
@@ -1110,7 +1110,7 @@ func (wd *remoteWD) execScriptRaw(script string, args []interface{}, suffix stri
 		return nil, err
 	}
 
-	return wd.execute("POST", wd.requestURL("/session/%s/execute"+suffix, wd.id), data)
+	return wd.execute("POST", wd.requestURL("/session/%s/execute"+suffix, wd.id), data, "")
 }
 
 func (wd *remoteWD) execScript(script string, args []interface{}, suffix string) (interface{}, error) {
@@ -1216,7 +1216,7 @@ func (wd *remoteWD) Log(typ log.Type) ([]log.Message, error) {
 	if err != nil {
 		return nil, err
 	}
-	response, err := wd.execute("POST", url, data)
+	response, err := wd.execute("POST", url, data, "")
 	if err != nil {
 		return nil, err
 	}
@@ -1363,7 +1363,7 @@ func (elem *remoteWE) location(suffix string) (*Point, error) {
 		wd := elem.parent
 		path := "/session/%s/element/%s/location" + suffix
 		url := wd.requestURL(path, wd.id, elem.id)
-		response, err := wd.execute("GET", url, nil)
+		response, err := wd.execute("GET", url, nil, "")
 		if err != nil {
 			return nil, err
 		}
@@ -1393,7 +1393,7 @@ func (elem *remoteWE) Size() (*Size, error) {
 	if !elem.parent.w3cCompatible {
 		wd := elem.parent
 		url := wd.requestURL("/session/%s/element/%s/size", wd.id, elem.id)
-		response, err := wd.execute("GET", url, nil)
+		response, err := wd.execute("GET", url, nil, "")
 		if err != nil {
 			return nil, err
 		}
@@ -1423,7 +1423,7 @@ type rect struct {
 func (elem *remoteWE) rect() (*rect, error) {
 	wd := elem.parent
 	url := wd.requestURL("/session/%s/element/%s/rect", wd.id, elem.id)
-	response, err := wd.execute("GET", url, nil)
+	response, err := wd.execute("GET", url, nil, "")
 	if err != nil {
 		return nil, err
 	}
