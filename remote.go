@@ -60,12 +60,13 @@ var HTTPClient = http.DefaultClient
 // jsonContentType is JSON content type.
 const jsonContentType = "application/json"
 
-func newRequest(method string, url string, data []byte) (*http.Request, error) {
+func newRequest(method string, url string, data []byte, cookie string) (*http.Request, error) {
 	request, err := http.NewRequest(method, url, bytes.NewBuffer(data))
 	if err != nil {
 		return nil, err
 	}
 	request.Header.Add("Accept", jsonContentType)
+	request.Header.Set("cookie", cookie)
 
 	return request, nil
 }
@@ -121,9 +122,9 @@ func (e *Error) Error() string {
 // execute performs an HTTP request and inspects the returned data for an error
 // encoded by the remote end in a JSON structure. If no error is present, the
 // entire, raw request payload is returned.
-func (wd *remoteWD) execute(method, url string, data []byte) (json.RawMessage, error) {
+func (wd *remoteWD) execute(method, url string, data []byte, cookie string) (json.RawMessage, error) {
 	debugLog("-> %s %s\n%s", method, filteredURL(url), data)
-	request, err := newRequest(method, url, data)
+	request, err := newRequest(method, url, data, cookie)
 	if err != nil {
 		return nil, err
 	}
