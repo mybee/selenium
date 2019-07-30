@@ -276,7 +276,7 @@ type WebDriver interface {
 	ResizeWindow(name string, width, height int) error
 
 	// Get navigates the browser to the provided URL.
-	Get(url string) error
+	Get(url, cookie string) error
 	// Forward moves forward in history.
 	Forward() error
 	// Back moves backward in history.
